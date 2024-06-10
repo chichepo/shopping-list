@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: my-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  server:
+    build: ./server
+    container_name: shopping-list-server
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/shoppinglist
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+
+  client:
+    build: ./client
+    container_name: shopping-list-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:
