@@ -13,6 +13,10 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import '../responsive.css'; // Import the CSS file
 
 function createData(name, products) {
   const subtotal = products.reduce((acc, product) => acc + product.quantity, 0);
@@ -29,7 +33,7 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#f0f8ff' : '#ffffff' }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -42,7 +46,7 @@ function Row(props) {
         <TableCell component="th" scope="row" style={{ fontWeight: 'bold' }}>
           {row.name}
         </TableCell>
-        <TableCell align="right">
+        <TableCell align="right" className="hide-on-mobile">
           <Typography variant="body1" component="div" style={{ fontWeight: 'bold' }}>
             Sub total products: {row.subtotal}
           </Typography>
@@ -51,17 +55,17 @@ function Row(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1, backgroundColor: '#f9f9f9' }}>
               <Table size="small" aria-label="products">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Product Name</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell style={{ backgroundColor: '#e6f7ff' }}>Product Name</TableCell>
+                    <TableCell align="right" style={{ backgroundColor: '#e6f7ff' }}>Quantity</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.products.map((product) => (
-                    <TableRow key={product.name}>
+                  {row.products.map((product, index) => (
+                    <TableRow key={product.name} style={{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#f0f8ff' }}>
                       <TableCell component="th" scope="row">
                         {product.name}
                       </TableCell>
@@ -118,29 +122,40 @@ const totalQuantity = rows.reduce((acc, row) => acc + row.subtotal, 0);
 
 export default function CollapsibleTable() {
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>
-              <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
-                Categories
-              </Typography>
-            </TableCell>
-            <TableCell align="right">
-              <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
-                Total products: {totalQuantity}
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Container maxWidth="md">
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Paper>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell style={{ backgroundColor: '#ffe6f0' }}>
+                    <img src={require('../assets/shopping-list.png').default} alt="Shopping List" style={{ width: '50px', height: '50px' }} />
+
+                    </TableCell>
+                    <TableCell style={{ backgroundColor: '#ffe6f0' }}>
+                      <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
+                        Categories
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right" className="hide-on-mobile" style={{ backgroundColor: '#ffe6f0' }}>
+                      <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
+                        Total products: {totalQuantity}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <Row key={row.name} row={row} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
