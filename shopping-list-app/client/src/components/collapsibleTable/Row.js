@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon, AddBox as AddBoxIcon, IndeterminateCheckBox as IndeterminateCheckBoxIcon } from '@mui/icons-material';
@@ -6,6 +6,10 @@ import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as Keyboard
 export default function Row({ row, onQuantityChange }) {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(row.products);
+
+  useEffect(() => {
+    setProducts(row.products);
+  }, [row.products]);
 
   const handleQuantityChange = (productName, change) => {
     const updatedProducts = products.map(product =>
