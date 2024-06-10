@@ -2,3 +2,19 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+/* Responsive image */
+.responsive-img {
+  width: 100%;
+  max-width: 50px;
+  height: auto;
+}
+
+/* Hide specific columns on small screens */
+@media (max-width: 600px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+/* Add custom styles here */

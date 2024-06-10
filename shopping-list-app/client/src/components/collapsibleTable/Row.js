@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField } from '@mui/material';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon, AddBox as AddBoxIcon, IndeterminateCheckBox as IndeterminateCheckBoxIcon } from '@mui/icons-material';
 
-function Row(props) {
-  const { row, onQuantityChange } = props;
+export default function Row({ row, onQuantityChange }) {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(row.products);
 
@@ -21,19 +17,11 @@ function Row(props) {
     onQuantityChange(row.name, updatedProducts);
   };
 
-  useEffect(() => {
-    setProducts(row.products);
-  }, [row.products]);
-
   return (
-    <React.Fragment>
+    <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#f0f8ff' : '#ffffff' }}>
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -65,11 +53,7 @@ function Row(props) {
                       </TableCell>
                       <TableCell align="center">
                         <Box display="flex" alignItems="center" justifyContent="center">
-                          <IconButton
-                            aria-label="decrease"
-                            size="small"
-                            onClick={() => handleQuantityChange(product.name, -1)}
-                          >
+                          <IconButton aria-label="decrease" size="small" onClick={() => handleQuantityChange(product.name, -1)}>
                             <IndeterminateCheckBoxIcon />
                           </IconButton>
                           <TextField
@@ -78,11 +62,7 @@ function Row(props) {
                             size="small"
                             style={{ width: '50px', textAlign: 'center', margin: '0 10px' }}
                           />
-                          <IconButton
-                            aria-label="increase"
-                            size="small"
-                            onClick={() => handleQuantityChange(product.name, 1)}
-                          >
+                          <IconButton aria-label="increase" size="small" onClick={() => handleQuantityChange(product.name, 1)}>
                             <AddBoxIcon />
                           </IconButton>
                         </Box>
@@ -95,7 +75,7 @@ function Row(props) {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
@@ -112,5 +92,3 @@ Row.propTypes = {
   }).isRequired,
   onQuantityChange: PropTypes.func.isRequired,
 };
-
-export default Row;

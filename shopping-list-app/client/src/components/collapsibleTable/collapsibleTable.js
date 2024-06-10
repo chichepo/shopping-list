@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Grid, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Button, Typography, Box } from '@mui/material';
 import Row from './Row';
 import { createData } from './utils';
-import './styles.css';
+import '../../styles.css';
 
 export default function CollapsibleTable({ categories, onSave, onCancel }) {
   const [categoryData, setCategoryData] = useState(categories.map(category => createData(category.name, category.products)));
@@ -21,8 +21,8 @@ export default function CollapsibleTable({ categories, onSave, onCancel }) {
 
   const handleSave = () => {
     onSave(categoryData);
-    setIsModified(false);
     setOriginalData(JSON.parse(JSON.stringify(categoryData)));
+    setIsModified(false);
   };
 
   const handleCancel = () => {
@@ -33,7 +33,7 @@ export default function CollapsibleTable({ categories, onSave, onCancel }) {
   const totalQuantity = categoryData.reduce((acc, category) => acc + category.subtotal, 0);
 
   return (
-    <Container maxWidth="md" className="margin-top">
+    <Container maxWidth="md">
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper>
@@ -41,13 +41,18 @@ export default function CollapsibleTable({ categories, onSave, onCancel }) {
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: '#ffe6f0' }}>
-                      <img src={require('../../assets/shopping-list.png').default} alt="Shopping List" style={{ width: '50px', height: '50px' }} />
-                    </TableCell>
-                    <TableCell colSpan={2} style={{ backgroundColor: '#ffe6f0', textAlign: 'center' }}>
-                      <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
-                        My shopping list
-                      </Typography>
+                    <TableCell colSpan={3} style={{ backgroundColor: '#ffe6f0' }}>
+                      <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Box display="flex" alignItems="center">
+                          <img src={require('../../assets/shopping-list.png').default} alt="Shopping List" className="responsive-img" />
+                          <Typography variant="h6" component="div" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
+                            My shopping list
+                          </Typography>
+                        </Box>
+                        <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
+                          Total Items: {totalQuantity}
+                        </Typography>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -59,11 +64,11 @@ export default function CollapsibleTable({ categories, onSave, onCancel }) {
               </Table>
             </TableContainer>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 2 }}>
-              <Button variant="contained" color="error" disabled={!isModified} onClick={handleCancel} style={{ marginRight: '10px' }}>
-                Cancel
-              </Button>
-              <Button variant="contained" disabled={!isModified} onClick={handleSave}>
+              <Button variant="contained" disabled={!isModified} onClick={handleSave} color="primary">
                 Save
+              </Button>
+              <Button variant="outlined" disabled={!isModified} onClick={handleCancel} color="error" style={{ marginLeft: '10px' }}>
+                Cancel
               </Button>
             </Box>
           </Paper>
