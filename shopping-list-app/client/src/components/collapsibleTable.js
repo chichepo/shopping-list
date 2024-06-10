@@ -15,7 +15,10 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import '../responsive.css'; // Import the CSS file
 
 function createData(name, products) {
@@ -28,8 +31,23 @@ function createData(name, products) {
 }
 
 function Row(props) {
-  const { row } = props;
+  const { row, onQuantityChange } = props;
   const [open, setOpen] = React.useState(false);
+  const [products, setProducts] = React.useState(row.products);
+
+  const handleQuantityChange = (productName, change) => {
+    const updatedProducts = products.map(product =>
+      product.name === productName
+        ? { ...product, quantity: Math.max(product.quantity + change, 0) }
+        : product
+    );
+    setProducts(updatedProducts);
+    onQuantityChange(row.name, updatedProducts);
+  };
+
+  React.useEffect(() => {
+    setProducts(row.products);
+  }, [row.products]);
 
   return (
     <React.Fragment>
@@ -48,7 +66,7 @@ function Row(props) {
         </TableCell>
         <TableCell align="right" className="hide-on-mobile">
           <Typography variant="body1" component="div" style={{ fontWeight: 'bold' }}>
-            Sub total products: {row.subtotal}
+            Sub total products: {products.reduce((acc, product) => acc + product.quantity, 0)}
           </Typography>
         </TableCell>
       </TableRow>
@@ -60,16 +78,39 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell style={{ backgroundColor: '#e6f7ff' }}>Product Name</TableCell>
-                    <TableCell align="right" style={{ backgroundColor: '#e6f7ff' }}>Quantity</TableCell>
+                    <TableCell align="center" style={{ backgroundColor: '#e6f7ff' }}>Quantity</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.products.map((product, index) => (
+                  {products.map((product, index) => (
                     <TableRow key={product.name} style={{ backgroundColor: index % 2 === 0 ? '#fafafa' : '#f0f8ff' }}>
                       <TableCell component="th" scope="row">
                         {product.name}
                       </TableCell>
-                      <TableCell align="right">{product.quantity}</TableCell>
+                      <TableCell align="center">
+                        <Box display="flex" alignItems="center" justifyContent="center">
+                          <IconButton
+                            aria-label="decrease"
+                            size="small"
+                            onClick={() => handleQuantityChange(product.name, -1)}
+                          >
+                            <IndeterminateCheckBoxIcon />
+                          </IconButton>
+                          <TextField
+                            value={product.quantity}
+                            inputProps={{ readOnly: true, style: { fontSize: '14px' } }} // Reduced font size
+                            size="small"
+                            style={{ width: '50px', textAlign: 'center', margin: '0 10px' }}
+                          />
+                          <IconButton
+                            aria-label="increase"
+                            size="small"
+                            onClick={() => handleQuantityChange(product.name, 1)}
+                          >
+                            <AddBoxIcon />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -93,34 +134,36 @@ Row.propTypes = {
       }),
     ).isRequired,
   }).isRequired,
+  onQuantityChange: PropTypes.func.isRequired,
 };
 
-const rows = [
-  createData('Cleaning Products', [
-    { name: 'Soap', quantity: 2 },
-    { name: 'Detergent', quantity: 3 },
-  ]),
-  createData('Dairy', [
-    { name: 'Milk', quantity: 5 },
-    { name: 'Cheese', quantity: 1 },
-  ]),
-  createData('Fruits and Vegetables', [
-    { name: 'Apple', quantity: 10 },
-    { name: 'Banana', quantity: 7 },
-  ]),
-  createData('Meat and Fish', [
-    { name: 'Chicken', quantity: 3 },
-    { name: 'Fish', quantity: 4 },
-  ]),
-  createData('Bakery', [
-    { name: 'Bread', quantity: 8 },
-    { name: 'Croissant', quantity: 2 },
-  ]),
-];
+export default function CollapsibleTable({ categories, onSave }) {
+  const [categoryData, setCategoryData] = React.useState(categories.map(category => createData(category.name, category.products)));
+  const [originalData, setOriginalData] = React.useState(JSON.parse(JSON.stringify(categoryData)));
+  const [isModified, setIsModified] = React.useState(false);
 
-const totalQuantity = rows.reduce((acc, row) => acc + row.subtotal, 0);
+  const handleQuantityChange = (categoryName, updatedProducts) => {
+    setCategoryData(categoryData.map(category =>
+      category.name === categoryName
+        ? { ...category, products: updatedProducts, subtotal: updatedProducts.reduce((acc, product) => acc + product.quantity, 0) }
+        : category
+    ));
+    setIsModified(true);
+  };
 
-export default function CollapsibleTable() {
+  const handleSave = () => {
+    onSave(categoryData);
+    setIsModified(false);
+    setOriginalData(JSON.parse(JSON.stringify(categoryData)));
+  };
+
+  const handleCancel = () => {
+    setCategoryData(JSON.parse(JSON.stringify(originalData)));
+    setIsModified(false);
+  };
+
+  const totalQuantity = categoryData.reduce((acc, category) => acc + category.subtotal, 0);
+
   return (
     <Container maxWidth="md">
       <Grid container spacing={2}>
@@ -131,31 +174,49 @@ export default function CollapsibleTable() {
                 <TableHead>
                   <TableRow>
                     <TableCell style={{ backgroundColor: '#ffe6f0' }}>
-                    <img src={require('../assets/shopping-list.png').default} alt="Shopping List" style={{ width: '50px', height: '50px' }} />
-
+                      <img src={require('../assets/shopping-list.png').default} alt="Shopping List" style={{ width: '50px', height: '50px' }} />
                     </TableCell>
-                    <TableCell style={{ backgroundColor: '#ffe6f0' }}>
+                    <TableCell colSpan={2} style={{ backgroundColor: '#ffe6f0', textAlign: 'center' }}>
                       <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
-                        Categories
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right" className="hide-on-mobile" style={{ backgroundColor: '#ffe6f0' }}>
-                      <Typography variant="h6" component="div" style={{ fontWeight: 'bold' }}>
-                        Total products: {totalQuantity}
+                        My shopping list
                       </Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <Row key={row.name} row={row} />
+                  {categoryData.map((category) => (
+                    <Row key={category.name} row={category} onQuantityChange={handleQuantityChange} />
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 2 }}>
+              <Button variant="contained" color="error" disabled={!isModified} onClick={handleCancel} style={{ marginRight: '10px' }}>
+                Cancel
+              </Button>
+              <Button variant="contained" disabled={!isModified} onClick={handleSave}>
+                Save
+              </Button>
+            </Box>
           </Paper>
         </Grid>
       </Grid>
     </Container>
   );
 }
+
+CollapsibleTable.propTypes = {
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      products: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string.isRequired,
+          quantity: PropTypes.number.isRequired,
+        }),
+      ).isRequired,
+    }),
+  ).isRequired,
+  onSave: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};

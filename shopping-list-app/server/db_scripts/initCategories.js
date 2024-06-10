@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Category = require('./models/Category');
+const Category = require('../models/Category');
 
 // Load environment variables from .env file
 dotenv.config();

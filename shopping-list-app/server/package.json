@@ -4,11 +4,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "init-categories": "node initCategories.js"
+    "init-categories": "node db_scripts/initCategories.js",
+    "init-items": "node db_scripts/initItems.js",
+    "clean-database": "node db_scripts/cleanDatabase.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^5.12.3"
+    "mongoose": "^5.13.8"
   }
 }
