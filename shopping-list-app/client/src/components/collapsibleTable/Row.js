@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
-import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon, AddBox as AddBoxIcon, IndeterminateCheckBox as IndeterminateCheckBoxIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon, AddBox as AddBoxIcon, IndeterminateCheckBox as IndeterminateCheckBoxIcon, DeleteForever as DeleteForeverIcon } from '@mui/icons-material';
 
-export default function Row({ row, onQuantityChange }) {
+export default function Row({ row, onQuantityChange, onDeleteItem }) {
   const [open, setOpen] = useState(false);
   const [products, setProducts] = useState(row.products);
 
@@ -21,6 +21,10 @@ export default function Row({ row, onQuantityChange }) {
     onQuantityChange(row.name, updatedProducts);
   };
 
+  const handleDeleteItem = (productName) => {
+    onDeleteItem(row.name, productName);
+  };
+
   return (
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#f0f8ff' : '#ffffff' }}>
@@ -34,7 +38,7 @@ export default function Row({ row, onQuantityChange }) {
         </TableCell>
         <TableCell align="right" className="hide-on-mobile">
           <Typography variant="body1" component="div" style={{ fontWeight: 'bold' }}>
-            Sub total products: {products.reduce((acc, product) => acc + product.quantity, 0)}
+            Sub total items: {products.reduce((acc, product) => acc + product.quantity, 0)}
           </Typography>
         </TableCell>
       </TableRow>
@@ -45,8 +49,9 @@ export default function Row({ row, onQuantityChange }) {
               <Table size="small" aria-label="products">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: '#e6f7ff' }}>Product Name</TableCell>
-                    <TableCell align="center" style={{ backgroundColor: '#e6f7ff' }}>Quantity</TableCell>
+                    <TableCell style={{ backgroundColor: '#e6f7ff' }}>Item</TableCell>
+                    <TableCell align="center" style={{ backgroundColor: '#e6f7ff' }}>Item Qty</TableCell>
+                    <TableCell align="right" style={{ backgroundColor: '#e6f7ff' }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -62,7 +67,7 @@ export default function Row({ row, onQuantityChange }) {
                           </IconButton>
                           <TextField
                             value={product.quantity}
-                            inputProps={{ readOnly: true, style: { fontSize: '14px' } }} // Reduced font size
+                            inputProps={{ readOnly: true, style: { fontSize: '14px', textAlign: 'center' } }} // Centralized text
                             size="small"
                             style={{ width: '50px', textAlign: 'center', margin: '0 10px' }}
                           />
@@ -70,6 +75,11 @@ export default function Row({ row, onQuantityChange }) {
                             <AddBoxIcon />
                           </IconButton>
                         </Box>
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton aria-label="delete" size="small" onClick={() => handleDeleteItem(product.name)}>
+                          <DeleteForeverIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -95,4 +105,5 @@ Row.propTypes = {
     ).isRequired,
   }).isRequired,
   onQuantityChange: PropTypes.func.isRequired,
+  onDeleteItem: PropTypes.func.isRequired,
 };

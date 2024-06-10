@@ -34,13 +34,34 @@ function App() {
     console.log('Changes canceled');
   };
 
+  const handleDelete = async (categoryName, itemName) => {
+    try {
+      const response = await axios.delete('http://localhost:5000/api/delete-item', { data: { categoryName, itemName } });
+      console.log(response.data.message);
+      setCategories(prevCategories => 
+        prevCategories.map(category => 
+          category.name === categoryName ? 
+            { ...category, products: category.products.filter(product => product.name !== itemName) } : 
+            category
+        )
+      );
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <CollapsibleTable categories={categories} onSave={handleSave} onCancel={handleCancel} />
+      <CollapsibleTable 
+        categories={categories} 
+        onSave={handleSave} 
+        onCancel={handleCancel} 
+        onDelete={handleDelete} 
+      />
     </div>
   );
 }

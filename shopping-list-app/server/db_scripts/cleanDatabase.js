@@ -1,3 +1,4 @@
+// File: shopping-list\shopping-list-app\server\db_scripts\cleanDatabase.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
