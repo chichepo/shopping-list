@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CollapsibleTable from './components/collapsibleTable';
+import CollapsibleTable from './components/collapsibleTable/collapsibleTable';
 
 function App() {
   const [categories, setCategories] = useState([]);
