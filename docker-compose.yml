@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   mongodb:
-    image: mongodb/mongodb-community-server:latest
+    image: mongo:latest
     container_name: my-mongo
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data:/data/db
+      - ./shopping-list-app/server/db_scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
 
   server:
-    build: ./server
+    build: ./shopping-list-app/server
     container_name: shopping-list-server
     environment:
       MONGO_URI: mongodb://mongodb:27017/shoppinglist
@@ -21,10 +21,10 @@ services:
       - mongodb
 
   client:
-    build: ./client
+    build: ./shopping-list-app/client
     container_name: shopping-list-client
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - server
 

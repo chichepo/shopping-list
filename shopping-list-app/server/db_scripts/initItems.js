@@ -1,4 +1,4 @@
-// File: shopping-list\shopping-list-app\server\db_scripts\initItems.js
+// File: shopping-list-app/server/db_scripts/initItems.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Category = require('../models/Category');
@@ -111,8 +111,15 @@ const initItems = async () => {
   ];
 
   try {
-    await Category.deleteMany(); // Clear existing categories
-    await Category.insertMany(categories);
+    for (const category of categories) {
+      const existingCategory = await Category.findOne({ name: category.name });
+      if (existingCategory) {
+        existingCategory.products = category.products;
+        await existingCategory.save();
+      } else {
+        await Category.create(category);
+      }
+    }
     console.log('Categories and items initialized');
   } catch (error) {
     console.error('Error initializing categories and items:', error.message);

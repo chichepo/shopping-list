@@ -1,10 +1,11 @@
-// File: shopping-list\shopping-list-app\server\db_scripts\initCategories.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Category = require('../models/Category');
 
 // Load environment variables from .env file
 dotenv.config();
+
+console.log('MONGO_URI:', process.env.MONGO_URI); // Debug to ensure the URI is loaded
 
 // Connect to the database
 const connectDB = async () => {

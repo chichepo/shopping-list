@@ -4,6 +4,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:dev": "nodemon server.js",
+    "start:prod": "NODE_ENV=production node server.js",
     "init-categories": "node db_scripts/initCategories.js",
     "init-items": "node db_scripts/initItems.js",
     "clean-database": "node db_scripts/cleanDatabase.js"
@@ -13,5 +15,8 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^5.13.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
