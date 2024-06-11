@@ -15,7 +15,7 @@ export default function CollapsibleTable({ categories, onSave, onCancel, onDelet
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteItemInfo, setDeleteItemInfo] = useState({ categoryName: '', itemName: '' });
+  const [deleteItemInfo, setDeleteItemInfo] = useState({ categoryName: '', itemName: '', itemQuantity: 0 });
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -52,7 +52,7 @@ export default function CollapsibleTable({ categories, onSave, onCancel, onDelet
       setSuccessDialogOpen(true);
     }
     try {
-      await axios.post('http://localhost:5000/api/save-categories', categoryData);
+      await onSave(categoryData);
       setOriginalData(JSON.parse(JSON.stringify(categoryData)));
       setIsModified(false);
       setNewItem(''); // Clear the text field
@@ -88,19 +88,19 @@ export default function CollapsibleTable({ categories, onSave, onCancel, onDelet
     setDeleteDialogOpen(false);
   };
 
-  const confirmDeleteItem = (categoryName, itemName) => {
-    setDeleteItemInfo({ categoryName, itemName });
+  const confirmDeleteItem = (categoryName, itemName, itemQuantity) => {
+    setDeleteItemInfo({ categoryName, itemName, itemQuantity });
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteItem = async () => {
-    const { categoryName, itemName } = deleteItemInfo;
+    const { categoryName, itemName, itemQuantity } = deleteItemInfo;
     try {
       await onDelete(categoryName, itemName);
       setCategoryData(prevCategoryData => 
         prevCategoryData.map(category => 
           category.name === categoryName ? 
-            { ...category, products: category.products.filter(product => product.name !== itemName), subtotal: category.subtotal - 1 } : 
+            { ...category, products: category.products.filter(product => product.name !== itemName), subtotal: category.subtotal - itemQuantity } : 
             category
         )
       );

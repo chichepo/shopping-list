@@ -21,8 +21,8 @@ export default function Row({ row, onQuantityChange, onDeleteItem }) {
     onQuantityChange(row.name, updatedProducts);
   };
 
-  const handleDeleteItem = (productName) => {
-    onDeleteItem(row.name, productName);
+  const handleDeleteItem = (productName, itemQuantity) => {
+    onDeleteItem(row.name, productName, itemQuantity);
   };
 
   return (
@@ -38,7 +38,7 @@ export default function Row({ row, onQuantityChange, onDeleteItem }) {
         </TableCell>
         <TableCell align="right" className="hide-on-mobile">
           <Typography variant="body1" component="div" style={{ fontWeight: 'bold' }}>
-            Sub total items: {products.reduce((acc, product) => acc + product.quantity, 0)}
+            Sub total products: {products.reduce((acc, product) => acc + product.quantity, 0)}
           </Typography>
         </TableCell>
       </TableRow>
@@ -49,9 +49,9 @@ export default function Row({ row, onQuantityChange, onDeleteItem }) {
               <Table size="small" aria-label="products">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ backgroundColor: '#e6f7ff' }}>Item</TableCell>
-                    <TableCell align="center" style={{ backgroundColor: '#e6f7ff' }}>Item Qty</TableCell>
-                    <TableCell align="right" style={{ backgroundColor: '#e6f7ff' }}></TableCell>
+                    <TableCell style={{ backgroundColor: '#e6f7ff' }}>Product Name</TableCell>
+                    <TableCell align="center" style={{ backgroundColor: '#e6f7ff' }}>Quantity</TableCell>
+                    <TableCell align="right" style={{ backgroundColor: '#e6f7ff' }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -77,7 +77,7 @@ export default function Row({ row, onQuantityChange, onDeleteItem }) {
                         </Box>
                       </TableCell>
                       <TableCell align="right">
-                        <IconButton aria-label="delete" size="small" onClick={() => handleDeleteItem(product.name)}>
+                        <IconButton aria-label="delete" size="small" onClick={() => handleDeleteItem(product.name, product.quantity)}>
                           <DeleteForeverIcon />
                         </IconButton>
                       </TableCell>
