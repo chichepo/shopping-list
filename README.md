@@ -125,6 +125,8 @@ It includes features like adding items to categories, displaying the total numbe
 - Docker
     Docker is recommended for running the application in a containerized environment.
 
+- Docker-compose
+
 - Git
 
     Git is required for cloning the repository.
