@@ -137,6 +137,8 @@ It includes features like adding items to categories, displaying the total numbe
 
     MongoDB is required as the database for the application.
 
+    You can run the script `shopping-list\shopping-list-app\server\db_scripts\launchMongodbContainer.sh` to get a running mondoDB session using containers.
+
     Alternatively, you can use MongoDB Atlas (cloud service) or Docker to run MongoDB locally.
 
 ## Installation
@@ -233,15 +235,27 @@ The application should now be running, and you can access it in your browser.
 ### Development and QA
 
 To set up the development and QA environment, use the dev_setup.sh script:
-    ```bash
-    ./dev_setup.sh
-    ```
+
+```bash
+cd shopping-list-app/server
+./dev_setup.sh
+
+cd shopping-list-app/client
+./dev_setup.sh
+```
+
 ### Production
 
 To set up the production environment, use the prod_setup.sh script:
-    ```bash
-    ./prod_setup.sh
-    ```
+
+```bash
+cd shopping-list-app/server
+./prod_setup.sh
+
+cd shopping-list-app/client
+./prod_setup.sh
+```
+
 ### Server Verification:
 
 The server should be running on `http://localhost:5000`.
@@ -259,6 +273,18 @@ The client should be running on `http://localhost:3000`.
    ```bash
    ./stop_services.sh
    ```
+
+**Pay attention: Useful commands to check and kill process running on port:**
+
+**MS-DOS:**
+
+    netstat -ano | findstr :5000
+    taskkill /PID 11116 /F
+
+**LINUX:**
+
+    netstat -anp | grep :5000
+    kill -9 <proces #>
 
 ### Unit tests for the server module
 

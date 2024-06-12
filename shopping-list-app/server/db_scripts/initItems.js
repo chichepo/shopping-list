@@ -1,10 +1,13 @@
 // File: shopping-list-app/server/db_scripts/initItems.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 const Category = require('../models/Category');
 
 // Load environment variables from .env file
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+console.log('MONGO_URI:', process.env.MONGO_URI); // Debug to ensure the URI is loaded
 
 // Connect to the database
 const connectDB = async () => {

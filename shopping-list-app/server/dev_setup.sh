@@ -1,9 +1,5 @@
 #!/bin/bash
-
-echo "Cleaning client..."
-rm -rf shopping-list-app/client/node_modules
-rm -rf shopping-list-app/client/build
-
+# File: shopping-list\shopping-list-app\server\dev_setup.sh
 echo "Cleaning server..."
 rm -rf shopping-list-app/server/node_modules
 
@@ -15,19 +11,6 @@ cd shopping-list-app/server
 npm install
 cd ../../
 
-echo "Installing client dependencies..."
-cd shopping-list-app/client
-npm install
-cd ../../
-
 echo "Starting server..."
 cd shopping-list-app/server
-npm run start:dev &
-cd ../../
-
-echo "Starting client..."
-cd shopping-list-app/client
-npm run start:dev &
-cd ../../
-
-echo "All done!"
+npm run start:dev

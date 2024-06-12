@@ -1,9 +1,11 @@
+// File: shopping-list/shopping-list-app/server/db_scripts/initCategories.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 const Category = require('../models/Category');
 
 // Load environment variables from .env file
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 console.log('MONGO_URI:', process.env.MONGO_URI); // Debug to ensure the URI is loaded
 
@@ -14,7 +16,7 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('MongoDB connected');
+    console.log('MongoDB connected to database:', process.env.MONGO_URI);
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
     process.exit(1);
