@@ -152,7 +152,7 @@ It includes features like adding items to categories, displaying the total numbe
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/shopping-list-app.git
+    git clone https://github.com/chichepo/shopping-list.git
     ```
 
 ### Database Initialization

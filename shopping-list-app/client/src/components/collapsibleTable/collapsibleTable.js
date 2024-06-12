@@ -50,7 +50,11 @@ export default function CollapsibleTable({ categories, onSave, onCancel, onDelet
       setCategoryData(updatedCategoryData);
       setSuccessMessage(`The item "${newItem}" has been successfully added to the category "${selectedCategory}".`);
       setSuccessDialogOpen(true);
+      setNewItem(''); // Clear the text field
     }
+
+    const totalQuantity = categoryData.reduce((acc, category) => acc + category.subtotal, 0);
+
     try {
       await onSave(categoryData);
       setOriginalData(JSON.parse(JSON.stringify(categoryData)));
