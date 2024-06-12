@@ -263,6 +263,7 @@ The client should be running on `http://localhost:3000`.
 ### Unit tests for the server module
 
 ```bash
+cd shopping-list-app/server
 npm test
 ```
 
