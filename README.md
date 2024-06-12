@@ -141,6 +141,13 @@ It includes features like adding items to categories, displaying the total numbe
 
 ## Installation
 
+`Important note:`
+
+`You can deploy the application in a more "traditional" way (for developer tasks), or by using Containers (refer to "Building and Running using Containers" later in this document).`
+
+`The following steps describe the "traditional" way.`
+
+
 1. Clone the repository:
     ```bash
     git clone https://github.com/your-username/shopping-list-app.git
@@ -235,23 +242,51 @@ To set up the production environment, use the prod_setup.sh script:
     ```bash
     ./prod_setup.sh
     ```
-## Server Verification:
+### Server Verification:
 
 The server should be running on `http://localhost:5000`.
 
 You can verify by opening a browser and navigating to `http://localhost:5000/api/items`.
 
 
-## Client Verification:
+### Client Verification:
 
 The client should be running on `http://localhost:3000`.
 
 
-## Stop the application
+### Stop the application
 
    ```bash
    ./stop_services.sh
    ```
+
+### Unit tests for the server module
+
+```bash
+npm test
+```
+
+Unit test report example:
+
+    $ npm test
+
+    > server@1.0.0 test
+    > jest
+
+    PASS  test/controllers/itemsController.test.js (5.207 s)
+    Items Controller
+        GET /api/categories
+        √ should return all categories (43 ms)
+        DELETE /api/delete-item
+        √ should delete an item from a category (25 ms)
+        √ should return 404 if category not found (6 ms)
+
+    Test Suites: 1 passed, 1 total
+    Tests:       3 passed, 3 total
+    Snapshots:   0 total
+    Time:        5.26 s
+    Ran all test suites.
+
 
 ## Building and Running using Containers
 
